@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Suspense, useState } from "react";
@@ -62,6 +62,7 @@ function CoursesContent() {
   const { data } = useSuspenseQuery(dashboardQuery);
   const queryClient = useQueryClient();
   const enrollFn = useServerFn(enrollCourse);
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<string>("All");
 
   const enrollMutation = useMutation({
@@ -109,8 +110,11 @@ function CoursesContent() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
-              whileHover={{ y: -4 }}
-              className="glass rounded-2xl p-5 flex flex-col gap-4"
+              whileHover={{ scale: 1.02, y: -4 }}
+              className="glass rounded-2xl p-5 flex flex-col gap-4 cursor-pointer"
+              onClick={() => {
+                if (enrollment) navigate({ to: "/progress" });
+              }}
             >
               <div className="flex items-start justify-between">
                 <div
@@ -144,7 +148,10 @@ function CoursesContent() {
                   variant="outline"
                   className="bg-white/5 border-white/10"
                   disabled={enrollMutation.isPending}
-                  onClick={() => enrollMutation.mutate(c.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    enrollMutation.mutate(c.id);
+                  }}
                 >
                   {enrolledIds.has(c.id) ? <><CheckCircle2 className="w-4 h-4 mr-1" /> Enrolled</> : "Enroll"}
                 </Button>

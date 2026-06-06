@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { motion } from "motion/react";
@@ -71,6 +71,7 @@ function DashboardSkeleton() {
 function DashboardContent() {
   const { data } = useSuspenseQuery(dashboardQuery);
   const { profile, courses, enrollments, activity } = data;
+  const navigate = useNavigate();
 
   const name = profile.display_name?.split(" ")[0] ?? "there";
   const minutesThisWeek = activity
@@ -136,11 +137,18 @@ function DashboardContent() {
               )}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Button className="bg-gradient-to-r from-violet to-pink text-background hover:opacity-90">
+              <Button
+                className="bg-gradient-to-r from-violet to-pink text-background hover:opacity-90"
+                onClick={() => navigate({ to: "/progress" })}
+              >
                 <Play className="w-4 h-4 mr-2" fill="currentColor" />
                 Continue learning
               </Button>
-              <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+              <Button
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => navigate({ to: "/courses" })}
+              >
                 Browse catalog <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
@@ -248,6 +256,8 @@ function DashboardContent() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 + i * 0.06 }}
+                whileHover={{ scale: 1.02 }}
+                onClick={() => navigate({ to: "/progress" })}
                 className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer"
               >
                 <div
