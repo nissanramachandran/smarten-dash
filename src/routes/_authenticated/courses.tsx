@@ -110,7 +110,13 @@ function CoursesContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
               whileHover={{ y: -4 }}
-              className="glass rounded-2xl p-5 flex flex-col gap-4"
+              className="glass rounded-2xl p-5 flex flex-col gap-4 cursor-pointer"
+              onClick={() => {
+                if (enrollment) {
+                  // navigate to progress on click; enroll button stops propagation
+                  window.location.assign("/progress");
+                }
+              }}
             >
               <div className="flex items-start justify-between">
                 <div
